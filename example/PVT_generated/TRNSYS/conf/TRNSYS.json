@@ -1,0 +1,11 @@
+{
+    "federateName": "TRNSYS",
+    "federationId": "PVT",
+    "fomFilepath": "conf/TRNSYS.xml",
+    "maxReconnectAttempts": 12,
+    "waitReconnectMs": 5000,
+    "isLateJoiner": false,
+    "stepSize": 1.0,
+    "lookAhead": 0.2,
+    "portNumber": 1345
+}

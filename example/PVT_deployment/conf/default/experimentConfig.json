@@ -1,0 +1,26 @@
+{
+  "federateTypesAllowed": [
+    "ExternalJava",
+    "TRNSYS"
+  ],
+  "expectedFederates": [
+    {
+      "federateType": "ExternalJava",
+      "count": 1
+    },
+    {
+      "federateType": "TRNSYS",
+      "count": 1
+    }
+  ],
+  "lateJoinerFederates": [
+    {
+      "federateType": "ExternalJava",
+      "count": 0
+    },
+    {
+      "federateType": "TRNSYS",
+      "count": 0
+    }
+  ]
+}
