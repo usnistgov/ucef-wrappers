@@ -20,6 +20,9 @@ import gov.nist.hla.gateway.GatewayCallback;
 import gov.nist.hla.gateway.GatewayFederate;
 import gov.nist.hla.trnsys.json.JsonRoot;
 import gov.nist.hla.trnsys.json.VariableMapping;
+import hla.rti.FederateNotExecutionMember;
+import hla.rti.InteractionClassNotPublished;
+import hla.rti.NameNotFound;
 
 public class TRNSYSFederate implements GatewayCallback {
     private static final Logger log = LogManager.getLogger();
@@ -30,8 +33,10 @@ public class TRNSYSFederate implements GatewayCallback {
     
     private GatewayFederate gateway;
     
-    private Map<String, Long> parameterToIndex = new HashMap<String, Long>();
-    private Map<String, Map<String, Long>> interactionToMapping = new HashMap<String, Map<String, Long>>();
+    private Map<String, Integer> parameterToIndex = new HashMap<String, Integer>();
+    private Map<String, Map<String, Integer>> interactionToMapping = new HashMap<String, Map<String, Integer>>();
+    
+    private double[] theData = null;
     
     public static void main(String[] args)
             throws IOException {
@@ -74,8 +79,25 @@ public class TRNSYSFederate implements GatewayCallback {
         }
         
         double[] data = server.getData();
-        log.info("received {}", data);
-        server.setData(null);
+        
+        for (String classpath : interactionToMapping.keySet()) {
+            Map<String, String> parameters = new HashMap<String, String>();
+            
+            for (Map.Entry<String, Integer> entry : interactionToMapping.get(classpath).entrySet()) {
+                final String parameter = entry.getKey();
+                final int index = entry.getValue();
+                
+                parameters.put(parameter, Double.toString(data[index-1]));
+            }
+            
+            try {
+                gateway.sendInteraction(classpath, parameters);
+            } catch (FederateNotExecutionMember | NameNotFound | InteractionClassNotPublished e) {
+                log.error("failed to send interaction " + classpath, e);
+            }
+        }
+        
+        server.setData(theData);
     }
 
     @Override
@@ -83,8 +105,8 @@ public class TRNSYSFederate implements GatewayCallback {
         try {
             JsonRoot root = parseJSON(configuration.getVariableMapping());
             
-            Set<Long> inputIndices = new HashSet<Long>();
-            Set<Long> outputIndices = new HashSet<Long>();
+            Set<Integer> inputIndices = new HashSet<Integer>();
+            Set<Integer> outputIndices = new HashSet<Integer>();
             for (VariableMapping entry : root.getInputs()) {
                 if (!inputIndices.add(entry.getIndex())) {
                     log.error("multiple input variables use index {}", entry.getIndex());
@@ -110,6 +132,7 @@ public class TRNSYSFederate implements GatewayCallback {
             log.error("failed to read JSON file {}", configuration.getVariableMapping());
         }
         
+        theData = new double[parameterToIndex.size()];
         server.startServer();
     }
 
@@ -127,25 +150,32 @@ public class TRNSYSFederate implements GatewayCallback {
 
     @Override
     public void prepareToResign() {
-        // TODO Auto-generated method stub
+        // make TRNSYS exit ?
     }
 
     @Override
     public void receiveInteraction(Double timeStep, String className, Map<String, String> parameters) {
-        // TODO Auto-generated method stub
-        
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            final String key = className + ":" + entry.getKey();
+            
+            if (parameterToIndex.containsKey(key)) {
+                double value = Double.parseDouble(entry.getValue());
+                int index = parameterToIndex.get(key);
+                theData[index-1] = value;
+            } else {
+                log.trace("skipped {}", key);
+            }
+        }
     }
 
     @Override
     public void receiveObject(Double timeStep, String className, String instanceName, Map<String, String> attributes) {
-        // TODO Auto-generated method stub
-        
+        // not supported
     }
 
     @Override
     public void terminate() {
         // TODO Auto-generated method stub
-        
     }
     
     private JsonRoot parseJSON(String filepath) throws IOException {
@@ -166,9 +196,9 @@ public class TRNSYSFederate implements GatewayCallback {
         log.trace("on output i={} var={} class={}", entry.getIndex(), entry.getVariable(), entry.getHlaClass());
         checkIfPublishedNumeric(entry.getHlaClass(), entry.getVariable());
         
-        Map<String, Long> parameterToIndex = interactionToMapping.get(entry.getHlaClass());
+        Map<String, Integer> parameterToIndex = interactionToMapping.get(entry.getHlaClass());
         if (parameterToIndex == null) {
-            parameterToIndex = new HashMap<String, Long>();
+            parameterToIndex = new HashMap<String, Integer>();
             interactionToMapping.put(entry.getHlaClass(), parameterToIndex);
         }
         

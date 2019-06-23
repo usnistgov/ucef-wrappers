@@ -39,6 +39,7 @@ public class ServerRunnable implements Runnable {
 	private boolean waitingForData = false;
 	
     private double[] dataFromTRNSYS = null;
+    private double[] returnDataTo = null;
 	
 	@Override
 	public void run() {
@@ -130,17 +131,6 @@ public class ServerRunnable implements Runnable {
 						    Thread.sleep(1000);
 						}
 						
-						
-						// ##########################################################################################################
-						// ********************************* To Do - Manipulate Incoming Data from TRNSYS ***************************
-						
-						// Access incoming data from TRNSYS, perform calculations in Java or other software environment
-						
-						double[] returnDataTo = PVT(dataFromTRNSYS);
-						
-						// ****************************************** END **********************************************************
-						// #########################################################################################################
-						
 						// *************************************** Serialize and Send Data to TRNSYS ******************************			
 						sendDataToTRNSYS(returnDataTo);
 						// ************************************************** END **************************************************
@@ -208,26 +198,9 @@ public class ServerRunnable implements Runnable {
 	        if (waitingForData == false) {
 	            // exception
 	        }
-	        // actually do something
+	        returnDataTo = data.clone();
 	        waitingForData = false;
 	    }
-	}
-	
-	private static double[] PVT(double[] dataFromTRNSYS) {
-		
-		System.out.println(Arrays.toString(dataFromTRNSYS));
-		
-		/* Change the size of the results array based on the number of outputs desired/required to be sent
-		 * to TRNSYS. The outbound array for the PVT example only needs one value, pLoad. */
-		
-		double[] results = new double[1];
-		
-		double fLoad = dataFromTRNSYS[0];
-		double pLoad = 500d * 3.6 * fLoad;
-		
-		results[0] = pLoad;
-		
-		return results;
 	}
 	
 	// Extract the correct number of bytes from the input stream

@@ -7,6 +7,8 @@ import org.cpswt.config.FederateConfigParser;
 import org.cpswt.hla.InteractionRoot;
 import org.cpswt.hla.base.AdvanceTimeRequest;
 
+import java.util.Arrays;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,6 +18,9 @@ public class ExternalJava extends ExternalJavaBase {
     private final static Logger log = LogManager.getLogger();
 
     private double currentTime = 0;
+    
+    private double fLoad;
+    private double pLoad;
 
     public ExternalJava(FederateConfig params) throws Exception {
         super(params);
@@ -40,10 +45,6 @@ public class ExternalJava extends ExternalJavaBase {
             super.disableTimeRegulation();
         }
 
-        /////////////////////////////////////////////
-        // TODO perform basic initialization below //
-        /////////////////////////////////////////////
-
         AdvanceTimeRequest atr = new AdvanceTimeRequest(currentTime);
         putAdvanceTimeRequest(atr);
 
@@ -52,10 +53,6 @@ public class ExternalJava extends ExternalJavaBase {
             readyToPopulate();
             log.info("...synchronized on readyToPopulate");
         }
-
-        ///////////////////////////////////////////////////////////////////////
-        // TODO perform initialization that depends on other federates below //
-        ///////////////////////////////////////////////////////////////////////
 
         if(!super.isLateJoiner()) {
             log.info("waiting on readyToRun...");
@@ -70,26 +67,14 @@ public class ExternalJava extends ExternalJavaBase {
             atr.requestSyncStart();
             enteredTimeGrantedState();
 
-            ////////////////////////////////////////////////////////////
-            // TODO send interactions that must be sent every logical //
-            // time step below                                        //
-            ////////////////////////////////////////////////////////////
-
-            // Set the interaction's parameters.
-            //
-            //    ToTRNSYS vToTRNSYS = create_ToTRNSYS();
-            //    vToTRNSYS.set_actualLogicalGenerationTime( < YOUR VALUE HERE > );
-            //    vToTRNSYS.set_federateFilter( < YOUR VALUE HERE > );
-            //    vToTRNSYS.set_originFed( < YOUR VALUE HERE > );
-            //    vToTRNSYS.set_pLoad( < YOUR VALUE HERE > );
-            //    vToTRNSYS.set_sourceFed( < YOUR VALUE HERE > );
-            //    vToTRNSYS.sendInteraction(getLRC(), currentTime + getLookAhead());
-
             checkReceivedSubscriptions();
-
-            ////////////////////////////////////////////////////////////////////
-            // TODO break here if ready to resign and break out of while loop //
-            ////////////////////////////////////////////////////////////////////
+            
+            pLoad = 500d * 3.6 * fLoad;
+            log.info("computed pLoad={}", pLoad);
+            
+            ToTRNSYS toTRNSYS = create_ToTRNSYS();
+            toTRNSYS.set_pLoad(pLoad);
+            toTRNSYS.sendInteraction(getLRC(), currentTime + getLookAhead());
 
             if (!exitCondition) {
                 currentTime += super.getStepSize();
@@ -103,16 +88,11 @@ public class ExternalJava extends ExternalJavaBase {
 
         // call exitGracefully to shut down federate
         exitGracefully();
-
-        //////////////////////////////////////////////////////////////////////
-        // TODO Perform whatever cleanups are needed before exiting the app //
-        //////////////////////////////////////////////////////////////////////
     }
 
     private void handleInteractionClass(FromTRNSYS interaction) {
-        ///////////////////////////////////////////////////////////////
-        // TODO implement how to handle reception of the interaction //
-        ///////////////////////////////////////////////////////////////
+        fLoad = interaction.get_fLoad();
+        log.info("received fLoad={}", fLoad);
     }
 
     public static void main(String[] args) {

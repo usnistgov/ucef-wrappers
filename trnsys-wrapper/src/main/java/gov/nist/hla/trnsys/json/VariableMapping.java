@@ -1,15 +1,15 @@
 package gov.nist.hla.trnsys.json;
 
 public class VariableMapping {
-    private long index;
+    private int index;
     private String variable;
     private String hlaClass;
     
-    public long getIndex() {
+    public int getIndex() {
         return index;
     }
     
-    public void setIndex(long index) {
+    public void setIndex(int index) {
         this.index = index;
     }
     
