@@ -99,18 +99,25 @@ public class TRNSYSFederate implements GatewayCallback {
         } catch (IOException e) {
             log.error("failed to read JSON file {}", configuration.getVariableMapping());
         }
+        
+        server.startServer();
     }
 
     @Override
     public void initializeWithPeers() {
-        // this is wrong - here to test the Windows to UCEF-VM communication path
-        server.startServer();
+        log.info("Waiting on TRNSYS simulation...");
+        while (!server.isReadyToSimulate()) {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
     public void prepareToResign() {
         // TODO Auto-generated method stub
-        
     }
 
     @Override

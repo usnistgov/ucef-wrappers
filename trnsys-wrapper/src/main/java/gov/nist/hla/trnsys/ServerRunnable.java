@@ -35,6 +35,8 @@ public class ServerRunnable implements Runnable {
 	private Thread worker;
 	private AtomicBoolean running = new AtomicBoolean(false);
 	
+	private boolean readyToRun = false;
+	
 	@Override
 	public void run() {
 		
@@ -77,13 +79,14 @@ public class ServerRunnable implements Runnable {
 
 						client = server.accept(); 
 						System.out.println("Client connection accepted ...");
+		                readyToRun = true;
 					} 
 					catch (IOException e) {
 						
 						System.out.println("Did not accept connection: " + e.getStackTrace());
 						System.exit(1);
 					}
-
+					
 					byte[] msg;
 
 					try{
@@ -171,8 +174,10 @@ public class ServerRunnable implements Runnable {
 		}
 		
 	}
-	
 
+	public boolean isReadyToSimulate() {
+	    return readyToRun;
+	}
 	
 	private static double[] PVT(double[] dataFromTRNSYS) {
 		
