@@ -1,0 +1,17 @@
+{
+    "inputs":[
+        {
+            "index":1,
+            "variable":"pLoad",
+            "hlaClass":"InteractionRoot.C2WInteractionRoot.ToTRNSYS"
+        }
+    ],
+    "outputs":[
+        {
+            "index":1,
+            "variable":"fLoad",
+            "hlaClass":"InteractionRoot.C2WInteractionRoot.FromTRNSYS"
+        }
+    ]
+}
+

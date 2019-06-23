@@ -4,8 +4,7 @@ import gov.nist.hla.trnsys.externaljava.rti.*;
 
 import org.cpswt.config.FederateConfig;
 import org.cpswt.config.FederateConfigParser;
-import org.cpswt.hla.base.ObjectReflector;
-import org.cpswt.hla.ObjectRoot;
+import org.cpswt.hla.InteractionRoot;
 import org.cpswt.hla.base.AdvanceTimeRequest;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,32 +17,18 @@ public class ExternalJava extends ExternalJavaBase {
 
     private double currentTime = 0;
 
-    ////////////////////////////////////////////////////////////////////////
-    // TODO instantiate objects that must be sent every logical time step //
-    ////////////////////////////////////////////////////////////////////////
-    // ToTRNSYS vToTRNSYS =
-    //     new ToTRNSYS();
-
     public ExternalJava(FederateConfig params) throws Exception {
         super(params);
-
-        //////////////////////////////////////////////////////
-        // TODO register object instances after super(args) //
-        //////////////////////////////////////////////////////
-        // vToTRNSYS.registerObject(getLRC());
     }
 
     private void checkReceivedSubscriptions() {
-
-        ObjectReflector reflector = null;
-        while ((reflector = getNextObjectReflectorNoWait()) != null) {
-            reflector.reflect();
-            ObjectRoot object = reflector.getObjectRoot();
-            if (object instanceof FromTRNSYS) {
-                handleObjectClass((FromTRNSYS) object);
+        InteractionRoot interaction = null;
+        while ((interaction = getNextInteractionNoWait()) != null) {
+            if (interaction instanceof FromTRNSYS) {
+                handleInteractionClass((FromTRNSYS) interaction);
             }
             else {
-                log.debug("unhandled object reflection: {}", object.getClassName());
+                log.debug("unhandled interaction: {}", interaction.getClassName());
             }
         }
     }
@@ -86,10 +71,19 @@ public class ExternalJava extends ExternalJavaBase {
             enteredTimeGrantedState();
 
             ////////////////////////////////////////////////////////////
-            // TODO objects that must be sent every logical time step //
+            // TODO send interactions that must be sent every logical //
+            // time step below                                        //
             ////////////////////////////////////////////////////////////
-            //    vToTRNSYS.set_pLoad(<YOUR VALUE HERE >);
-            //    vToTRNSYS.updateAttributeValues(getLRC(), currentTime + getLookAhead());
+
+            // Set the interaction's parameters.
+            //
+            //    ToTRNSYS vToTRNSYS = create_ToTRNSYS();
+            //    vToTRNSYS.set_actualLogicalGenerationTime( < YOUR VALUE HERE > );
+            //    vToTRNSYS.set_federateFilter( < YOUR VALUE HERE > );
+            //    vToTRNSYS.set_originFed( < YOUR VALUE HERE > );
+            //    vToTRNSYS.set_pLoad( < YOUR VALUE HERE > );
+            //    vToTRNSYS.set_sourceFed( < YOUR VALUE HERE > );
+            //    vToTRNSYS.sendInteraction(getLRC(), currentTime + getLookAhead());
 
             checkReceivedSubscriptions();
 
@@ -115,10 +109,10 @@ public class ExternalJava extends ExternalJavaBase {
         //////////////////////////////////////////////////////////////////////
     }
 
-    private void handleObjectClass(FromTRNSYS object) {
-        //////////////////////////////////////////////////////////
-        // TODO implement how to handle reception of the object //
-        //////////////////////////////////////////////////////////
+    private void handleInteractionClass(FromTRNSYS interaction) {
+        ///////////////////////////////////////////////////////////////
+        // TODO implement how to handle reception of the interaction //
+        ///////////////////////////////////////////////////////////////
     }
 
     public static void main(String[] args) {

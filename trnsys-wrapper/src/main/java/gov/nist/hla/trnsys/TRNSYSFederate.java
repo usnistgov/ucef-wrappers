@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gov.nist.hla.gateway.GatewayCallback;
 import gov.nist.hla.gateway.GatewayFederate;
+import gov.nist.hla.trnsys.json.JsonRoot;
+import gov.nist.hla.trnsys.json.VariableMapping;
 
 public class TRNSYSFederate implements GatewayCallback {
     private static final Logger log = LogManager.getLogger();
@@ -59,8 +61,18 @@ public class TRNSYSFederate implements GatewayCallback {
 
     @Override
     public void initializeSelf() {
-        // TODO Auto-generated method stub
-        
+        try {
+            JsonRoot root = parseJSON(configuration.getVariableMapping());
+            
+            for (VariableMapping entry : root.getInputs()) {
+                log.info("{} {} {}", entry.getIndex(), entry.getVariable(), entry.getHlaClass());
+            }
+            for (VariableMapping entry : root.getOutputs()) {
+                log.info("{} {} {}", entry.getIndex(), entry.getVariable(), entry.getHlaClass());
+            }
+        } catch (IOException e) {
+            log.error("failed to read JSON file {}", configuration.getVariableMapping());
+        }
     }
 
     @Override
@@ -91,5 +103,12 @@ public class TRNSYSFederate implements GatewayCallback {
     public void terminate() {
         // TODO Auto-generated method stub
         
+    }
+    
+    private JsonRoot parseJSON(String filepath) throws IOException {
+        log.info("reading JSON from {}", filepath);
+        File file = new File(filepath);
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(file, JsonRoot.class);
     }
 }

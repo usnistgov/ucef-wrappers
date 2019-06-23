@@ -7,5 +7,6 @@
     "isLateJoiner": false,
     "stepSize": 1.0,
     "lookAhead": 0.2,
-    "portNumber": 1345
+    "portNumber": 1345,
+    "variableMapping": "conf/PVT.json"
 }
