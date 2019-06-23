@@ -64,8 +64,18 @@ public class TRNSYSFederate implements GatewayCallback {
     
     @Override
     public void doTimeStep(Double timeStep) {
-        // TODO Auto-generated method stub
+        log.info("Waiting on TRNSYS simulation...");
+        while (!server.isReadyForData()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         
+        double[] data = server.getData();
+        log.info("received {}", data);
+        server.setData(null);
     }
 
     @Override

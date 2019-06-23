@@ -36,6 +36,9 @@ public class ServerRunnable implements Runnable {
 	private AtomicBoolean running = new AtomicBoolean(false);
 	
 	private boolean readyToRun = false;
+	private boolean waitingForData = false;
+	
+    private double[] dataFromTRNSYS = null;
 	
 	@Override
 	public void run() {
@@ -43,9 +46,7 @@ public class ServerRunnable implements Runnable {
 		running.set(true);
 		
 		List<Double> TRNSYSData = null; 
-		
-		double[] dataFromTRNSYS = null;
-		
+				
 		while (running.get()) {
 			
 			// ========================================================================
@@ -108,29 +109,37 @@ public class ServerRunnable implements Runnable {
 						TRNSYSData = new ArrayList<Double>();
 						TRNSYSData = PrintDataTRNSYS(jTRN); 
 
-						// Create an array of type doubles from incoming data for sharing with other processes
+						// Create an array of type doubles from incoming data for sharing with other processes\
 						dataFromTRNSYS = new double[TRNSYSData.size()];
 
 						for (int index = 0; index < dataFromTRNSYS.length; index++){
 							dataFromTRNSYS[index] = TRNSYSData.get(index);
-						}	        	
-
+						}
+						
 						//****************************************** END *********************************************************
 						
-						
+						synchronized (this) {
+						    waitingForData = true;
+						}
+						while (true) {
+						    synchronized (this) {
+						        if (!waitingForData) {
+						            break;
+						        }
+						    }
+						    Thread.sleep(1000);
+						}
 						
 						
 						// ##########################################################################################################
 						// ********************************* To Do - Manipulate Incoming Data from TRNSYS ***************************
 						
-						// Access incoming data from TRNSYS, perform calculations in Java or other software environment 
+						// Access incoming data from TRNSYS, perform calculations in Java or other software environment
+						
 						double[] returnDataTo = PVT(dataFromTRNSYS);
 						
 						// ****************************************** END **********************************************************
 						// #########################################################################################################
-						
-									
-											
 						
 						// *************************************** Serialize and Send Data to TRNSYS ******************************			
 						sendDataToTRNSYS(returnDataTo);
@@ -177,6 +186,31 @@ public class ServerRunnable implements Runnable {
 
 	public boolean isReadyToSimulate() {
 	    return readyToRun;
+	}
+	
+	public boolean isReadyForData() {
+	    synchronized (this) {
+	        return waitingForData;
+	    }
+	}
+	
+	public double[] getData() {
+	    synchronized (this) {
+	        if (waitingForData == false) {
+	            // exception
+	        }
+	    }
+	    return dataFromTRNSYS;
+	}
+	
+	public void setData(double[] data) {
+	    synchronized (this) {
+	        if (waitingForData == false) {
+	            // exception
+	        }
+	        // actually do something
+	        waitingForData = false;
+	    }
 	}
 	
 	private static double[] PVT(double[] dataFromTRNSYS) {
