@@ -72,7 +72,7 @@ public class TRNSYSFederate implements GatewayCallback {
         log.info("Waiting on TRNSYS simulation...");
         while (!server.isReadyForData()) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

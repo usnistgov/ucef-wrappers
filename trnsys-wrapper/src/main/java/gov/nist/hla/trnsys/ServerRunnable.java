@@ -128,7 +128,7 @@ public class ServerRunnable implements Runnable {
 						            break;
 						        }
 						    }
-						    Thread.sleep(1000);
+						    Thread.sleep(50);
 						}
 						
 						// *************************************** Serialize and Send Data to TRNSYS ******************************			
