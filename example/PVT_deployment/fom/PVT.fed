@@ -48,12 +48,6 @@
         (attribute FederateHost reliable timestamp)
         (attribute FederateType reliable timestamp)
       )
-      (class FromTRNSYS
-        (attribute fLoad reliable timestamp)
-      )
-      (class ToTRNSYS
-        (attribute pLoad reliable timestamp)
-      )
     ) 
   )
   (interactions
@@ -301,6 +295,12 @@
       )
       (class SimResume reliable timestamp
       )
+      )
+      (class FromTRNSYS reliable timestamp
+        (parameter fLoad)
+      )
+      (class ToTRNSYS reliable timestamp
+        (parameter pLoad)
       )
       )
     )

@@ -7,68 +7,70 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.cpswt.utils.CpswtUtils;
 
-import hla.rti.AttributeHandleSet;
 import hla.rti.FederateNotExecutionMember;
+import hla.rti.InteractionClassNotDefined;
+import hla.rti.InteractionClassNotPublished;
+import hla.rti.InteractionClassNotSubscribed;
 import hla.rti.LogicalTime;
 import hla.rti.NameNotFound;
-import hla.rti.ObjectClassNotDefined;
-import hla.rti.ObjectClassNotPublished;
-import hla.rti.ObjectClassNotSubscribed;
 import hla.rti.RTIambassador;
-import hla.rti.ReflectedAttributes;
-import hla.rti.SuppliedAttributes;
+import hla.rti.ReceivedInteraction;
 
 import org.cpswt.hla.*;
 
 /**
-* Implements ObjectRoot.FromTRNSYS
+* Implements InteractionRoot.C2WInteractionRoot.FromTRNSYS
 */
-public class FromTRNSYS extends ObjectRoot {
+public class FromTRNSYS extends C2WInteractionRoot {
 
     private static final Logger logger = LogManager.getLogger();
 
     /**
-    * Creates an instance of the FromTRNSYS object class with default attribute values.
+    * Creates an instance of the FromTRNSYS interaction class with default parameter values.
     */
     public FromTRNSYS() {}
 
+    private static int _actualLogicalGenerationTime_handle;
     private static int _fLoad_handle;
+    private static int _federateFilter_handle;
+    private static int _originFed_handle;
+    private static int _sourceFed_handle;
 
     private static boolean _isInitialized = false;
 
     private static int _handle;
 
     /**
-    * Returns the handle (RTI assigned) of the FromTRNSYS object class.
+    * Returns the handle (RTI assigned) of the FromTRNSYS interaction class.
     * Note: As this is a static method, it is NOT polymorphic, and so, if called on
     * a reference will return the handle of the class pertaining to the reference,
     * rather than the handle of the class for the instance referred to by the reference.
     * For the polymorphic version of this method, use {@link #getClassHandle()}.
     *
-    * @return the RTI assigned integer handle that represents this object class
+    * @return the RTI assigned integer handle that represents this interaction class
     */
     public static int get_handle() {
         return _handle;
     }
 
     /**
-    * Returns the fully-qualified (dot-delimited) name of the FromTRNSYS object class.
+    * Returns the fully-qualified (dot-delimited) name of the FromTRNSYS interaction class.
     * Note: As this is a static method, it is NOT polymorphic, and so, if called on
     * a reference will return the name of the class pertaining to the reference,
     * rather than the name of the class for the instance referred to by the reference.
     * For the polymorphic version of this method, use {@link #getClassName()}.
     *
-    * @return the fully-qualified HLA class path for this object class
+    * @return the fully-qualified HLA class path for this interaction class
     */
     public static String get_class_name() {
-        return "ObjectRoot.FromTRNSYS";
+        return "InteractionRoot.C2WInteractionRoot.FromTRNSYS";
     }
 
     /**
     * Returns the simple name (the last name in the dot-delimited fully-qualified
-    * class name) of the FromTRNSYS object class.
+    * class name) of the FromTRNSYS interaction class.
     *
-    * @return the name of this object class
+    * @return the name of this interaction class
     */
     public static String get_simple_class_name() {
         return "FromTRNSYS";
@@ -78,65 +80,63 @@ public class FromTRNSYS extends ObjectRoot {
     private static Set< String > _allDatamemberNames = new HashSet< String >();
 
     /**
-    * Returns a set containing the names of all of the non-hidden attributes in the
-    * FromTRNSYS object class.
+    * Returns a set containing the names of all of the non-hidden parameters in the
+    * FromTRNSYS interaction class.
     * Note: As this is a static method, it is NOT polymorphic, and so, if called on
     * a reference will return a set of parameter names pertaining to the reference,
     * rather than the parameter names of the class for the instance referred to by
     * the reference.  For the polymorphic version of this method, use
-    * {@link #getAttributeNames()}.
+    * {@link #getParameterNames()}.
     *
-    * @return a modifiable set of the non-hidden attribute names for this object class
+    * @return a modifiable set of the non-hidden parameter names for this interaction class
     */
-    public static Set< String > get_attribute_names() {
+    public static Set< String > get_parameter_names() {
         return new HashSet< String >(_datamemberNames);
     }
 
     /**
-    * Returns a set containing the names of all of the attributes in the
-    * FromTRNSYS object class.
+    * Returns a set containing the names of all of the parameters in the
+    * FromTRNSYS interaction class.
     * Note: As this is a static method, it is NOT polymorphic, and so, if called on
     * a reference will return a set of parameter names pertaining to the reference,
     * rather than the parameter names of the class for the instance referred to by
     * the reference.  For the polymorphic version of this method, use
-    * {@link #getAttributeNames()}.
+    * {@link #getParameterNames()}.
     *
-    * @return a modifiable set of the attribute names for this object class
+    * @return a modifiable set of the parameter names for this interaction class
     */
-    public static Set< String > get_all_attribute_names() {
+    public static Set< String > get_all_parameter_names() {
         return new HashSet< String >(_allDatamemberNames);
     }
 
-    private static Set< String > _publishAttributeNameSet = new HashSet< String >();
-    private static Set< String > _subscribeAttributeNameSet = new HashSet< String >();
-
     static {
-        _classNameSet.add("ObjectRoot.FromTRNSYS");
-        _classNameClassMap.put("ObjectRoot.FromTRNSYS", FromTRNSYS.class);
+        _classNameSet.add("InteractionRoot.C2WInteractionRoot.FromTRNSYS");
+        _classNameClassMap.put("InteractionRoot.C2WInteractionRoot.FromTRNSYS", FromTRNSYS.class);
 
-        _datamemberClassNameSetMap.put("ObjectRoot.FromTRNSYS", _datamemberNames);
-        _allDatamemberClassNameSetMap.put("ObjectRoot.FromTRNSYS", _allDatamemberNames);
+        _datamemberClassNameSetMap.put("InteractionRoot.C2WInteractionRoot.FromTRNSYS", _datamemberNames);
+        _allDatamemberClassNameSetMap.put("InteractionRoot.C2WInteractionRoot.FromTRNSYS", _allDatamemberNames);
 
         _datamemberNames.add("fLoad");
 
         _datamemberTypeMap.put("fLoad", "double");
 
+        _allDatamemberNames.add("actualLogicalGenerationTime");
         _allDatamemberNames.add("fLoad");
-
-        _classNamePublishAttributeNameMap.put("ObjectRoot.FromTRNSYS", _publishAttributeNameSet);
-        _classNameSubscribeAttributeNameMap.put("ObjectRoot.FromTRNSYS", _subscribeAttributeNameSet);
+        _allDatamemberNames.add("federateFilter");
+        _allDatamemberNames.add("originFed");
+        _allDatamemberNames.add("sourceFed");
     }
 
     protected static void init(RTIambassador rti) {
         if (_isInitialized) return;
         _isInitialized = true;
 
-        ObjectRoot.init(rti);
+        C2WInteractionRoot.init(rti);
 
         boolean isNotInitialized = true;
         while(isNotInitialized) {
             try {
-                _handle = rti.getObjectClassHandle("ObjectRoot.FromTRNSYS");
+                _handle = rti.getInteractionClassHandle("InteractionRoot.C2WInteractionRoot.FromTRNSYS");
                 isNotInitialized = false;
             } catch (FederateNotExecutionMember e) {
                 logger.error("could not initialize: Federate Not Execution Member", e);
@@ -150,20 +150,24 @@ public class FromTRNSYS extends ObjectRoot {
             }
         }
 
-        _classNameHandleMap.put("ObjectRoot.FromTRNSYS", get_handle());
-        _classHandleNameMap.put(get_handle(), "ObjectRoot.FromTRNSYS");
+        _classNameHandleMap.put("InteractionRoot.C2WInteractionRoot.FromTRNSYS", get_handle());
+        _classHandleNameMap.put(get_handle(), "InteractionRoot.C2WInteractionRoot.FromTRNSYS");
         _classHandleSimpleNameMap.put(get_handle(), "FromTRNSYS");
 
         isNotInitialized = true;
         while(isNotInitialized) {
             try {
-                _fLoad_handle = rti.getAttributeHandle("fLoad", get_handle());
+                _actualLogicalGenerationTime_handle = rti.getParameterHandle("actualLogicalGenerationTime", get_handle());
+                _fLoad_handle = rti.getParameterHandle("fLoad", get_handle());
+                _federateFilter_handle = rti.getParameterHandle("federateFilter", get_handle());
+                _originFed_handle = rti.getParameterHandle("originFed", get_handle());
+                _sourceFed_handle = rti.getParameterHandle("sourceFed", get_handle());
                 isNotInitialized = false;
             } catch (FederateNotExecutionMember e) {
                 logger.error("could not initialize: Federate Not Execution Member", e);
                 return;
-            } catch (ObjectClassNotDefined e) {
-                logger.error("could not initialize: Object Class Not Defined", e);
+            } catch (InteractionClassNotDefined e) {
+                logger.error("could not initialize: Interaction Class Not Defined", e);
                 return;
             } catch (NameNotFound e) {
                 logger.error("could not initialize: Name Not Found", e);
@@ -174,15 +178,23 @@ public class FromTRNSYS extends ObjectRoot {
             }
         }
 
-        _datamemberNameHandleMap.put("ObjectRoot.FromTRNSYS.fLoad", _fLoad_handle);
+        _datamemberNameHandleMap.put("InteractionRoot.C2WInteractionRoot.FromTRNSYS.actualLogicalGenerationTime", _actualLogicalGenerationTime_handle);
+        _datamemberNameHandleMap.put("InteractionRoot.C2WInteractionRoot.FromTRNSYS.fLoad", _fLoad_handle);
+        _datamemberNameHandleMap.put("InteractionRoot.C2WInteractionRoot.FromTRNSYS.federateFilter", _federateFilter_handle);
+        _datamemberNameHandleMap.put("InteractionRoot.C2WInteractionRoot.FromTRNSYS.originFed", _originFed_handle);
+        _datamemberNameHandleMap.put("InteractionRoot.C2WInteractionRoot.FromTRNSYS.sourceFed", _sourceFed_handle);
 
+        _datamemberHandleNameMap.put(_actualLogicalGenerationTime_handle, "actualLogicalGenerationTime");
         _datamemberHandleNameMap.put(_fLoad_handle, "fLoad");
+        _datamemberHandleNameMap.put(_federateFilter_handle, "federateFilter");
+        _datamemberHandleNameMap.put(_originFed_handle, "originFed");
+        _datamemberHandleNameMap.put(_sourceFed_handle, "sourceFed");
     }
 
     private static boolean _isPublished = false;
 
     /**
-    * Publishes the FromTRNSYS object class for a federate.
+    * Publishes the FromTRNSYS interaction class for a federate.
     *
     * @param rti handle to the Local RTI Component
     */
@@ -191,27 +203,17 @@ public class FromTRNSYS extends ObjectRoot {
 
         init(rti);
 
-        AttributeHandleSet publishedAttributeHandleSet = _factory.createAttributeHandleSet();
-        for(String attributeName : _publishAttributeNameSet) {
-            try {
-                publishedAttributeHandleSet.add(_datamemberNameHandleMap.get("ObjectRoot.FromTRNSYS." + attributeName));
-                logger.trace("publish {}:{}", get_class_name(), attributeName);
-            } catch (Exception e) {
-                logger.error("could not publish \"" + attributeName + "\" attribute.", e);
-            }
-        }
-
         synchronized(rti) {
             boolean isNotPublished = true;
             while(isNotPublished) {
                 try {
-                    rti.publishObjectClass(get_handle(), publishedAttributeHandleSet);
+                    rti.publishInteractionClass(get_handle());
                     isNotPublished = false;
                 } catch (FederateNotExecutionMember e) {
                     logger.error("could not publish: Federate Not Execution Member", e);
                     return;
-                } catch (ObjectClassNotDefined e) {
-                    logger.error("could not publish: Object Class Not Defined", e);
+                } catch (InteractionClassNotDefined e) {
+                    logger.error("could not publish: Interaction Class Not Defined", e);
                     return;
                 } catch (Exception e) {
                     logger.error(e);
@@ -225,7 +227,7 @@ public class FromTRNSYS extends ObjectRoot {
     }
 
     /**
-    * Unpublishes the FromTRNSYS object class for a federate.
+    * Unpublishes the FromTRNSYS interaction class for a federate.
     *
     * @param rti handle to the Local RTI Component
     */
@@ -238,16 +240,16 @@ public class FromTRNSYS extends ObjectRoot {
             boolean isNotUnpublished = true;
             while(isNotUnpublished) {
                 try {
-                    rti.unpublishObjectClass(get_handle());
+                    rti.unpublishInteractionClass(get_handle());
                     isNotUnpublished = false;
                 } catch (FederateNotExecutionMember e) {
                     logger.error("could not unpublish: Federate Not Execution Member", e);
                     return;
-                } catch (ObjectClassNotDefined e) {
-                    logger.error("could not unpublish: Object Class Not Defined", e);
+                } catch (InteractionClassNotDefined e) {
+                    logger.error("could not unpublish: Interaction Class Not Defined", e);
                     return;
-                } catch (ObjectClassNotPublished e) {
-                    logger.error("could not unpublish: Object Class Not Published", e);
+                } catch (InteractionClassNotPublished e) {
+                    logger.error("could not unpublish: Interaction Class Not Published", e);
                     return;
                 } catch (Exception e) {
                     logger.error(e);
@@ -263,7 +265,7 @@ public class FromTRNSYS extends ObjectRoot {
     private static boolean _isSubscribed = false;
 
     /**
-    * Subscribes a federate to the FromTRNSYS object class.
+    * Subscribes a federate to the FromTRNSYS interaction class.
     *
     * @param rti handle to the Local RTI Component
     */
@@ -272,27 +274,17 @@ public class FromTRNSYS extends ObjectRoot {
 
         init(rti);
 
-        AttributeHandleSet subscribedAttributeHandleSet = _factory.createAttributeHandleSet();
-        for(String attributeName : _subscribeAttributeNameSet) {
-            try {
-                subscribedAttributeHandleSet.add(_datamemberNameHandleMap.get("ObjectRoot.FromTRNSYS." + attributeName));
-                logger.trace("subscribe {}:{}", get_class_name(), attributeName);
-            } catch (Exception e) {
-                logger.error("could not subscribe to \"" + attributeName + "\" attribute.", e);
-            }
-        }
-
         synchronized(rti) {
             boolean isNotSubscribed = true;
             while(isNotSubscribed) {
                 try {
-                    rti.subscribeObjectClassAttributes(get_handle(), subscribedAttributeHandleSet);
+                    rti.subscribeInteractionClass(get_handle());
                     isNotSubscribed = false;
                 } catch (FederateNotExecutionMember e) {
                     logger.error("could not subscribe: Federate Not Execution Member", e);
                     return;
-                } catch (ObjectClassNotDefined e) {
-                    logger.error("could not subscribe: Object Class Not Defined", e);
+                } catch (InteractionClassNotDefined e) {
+                    logger.error("could not subscribe: Interaction Class Not Defined", e);
                     return;
                 } catch (Exception e) {
                     logger.error(e);
@@ -306,7 +298,7 @@ public class FromTRNSYS extends ObjectRoot {
     }
 
     /**
-    * Unsubscribes a federate from the FromTRNSYS object class.
+    * Unsubscribes a federate from the FromTRNSYS interaction class.
     *
     * @param rti handle to the Local RTI Component
     */
@@ -319,16 +311,16 @@ public class FromTRNSYS extends ObjectRoot {
             boolean isNotUnsubscribed = true;
             while(isNotUnsubscribed) {
                 try {
-                    rti.unsubscribeObjectClass(get_handle());
+                    rti.unsubscribeInteractionClass(get_handle());
                     isNotUnsubscribed = false;
                 } catch (FederateNotExecutionMember e) {
                     logger.error("could not unsubscribe: Federate Not Execution Member", e);
                     return;
-                } catch (ObjectClassNotDefined e) {
-                    logger.error("could not unsubscribe: Object Class Not Defined", e);
+                } catch (InteractionClassNotDefined e) {
+                    logger.error("could not unsubscribe: Interaction Class Not Defined", e);
                     return;
-                } catch (ObjectClassNotSubscribed e) {
-                    logger.error("could not unsubscribe: Object Class Not Subscribed", e);
+                } catch (InteractionClassNotSubscribed e) {
+                    logger.error("could not unsubscribe: Interaction Class Not Subscribed", e);
                     return;
                 } catch (Exception e) {
                     logger.error(e);
@@ -343,30 +335,30 @@ public class FromTRNSYS extends ObjectRoot {
 
     /**
     * Return true if "handle" is equal to the handle (RTI assigned) of this class
-    * (that is, the FromTRNSYS object class).
+    * (that is, the FromTRNSYS interaction class).
     *
     * @param handle handle to compare to the value of the handle (RTI assigned) of
-    * this class (the FromTRNSYS object class).
+    * this class (the FromTRNSYS interaction class).
     * @return "true" if "handle" matches the value of the handle of this class
-    * (that is, the FromTRNSYS object class).
+    * (that is, the FromTRNSYS interaction class).
     */
     public static boolean match(int handle) {
         return handle == get_handle();
     }
 
     /**
-    * Returns the handle (RTI assigned) of this instance's object class .
+    * Returns the handle (RTI assigned) of this instance's interaction class .
     *
-    * @return the handle (RTI assigned) if this instance's object class
+    * @return the handle (RTI assigned) if this instance's interaction class
     */
     public int getClassHandle() {
         return get_handle();
     }
 
     /**
-    * Returns the fully-qualified (dot-delimited) name of this instance's object class.
+    * Returns the fully-qualified (dot-delimited) name of this instance's interaction class.
     *
-    * @return the fully-qualified (dot-delimited) name of this instance's object class
+    * @return the fully-qualified (dot-delimited) name of this instance's interaction class
     */
     public String getClassName() {
         return get_class_name();
@@ -374,208 +366,156 @@ public class FromTRNSYS extends ObjectRoot {
 
     /**
     * Returns the simple name (last name in its fully-qualified dot-delimited name)
-    * of this instance's object class.
+    * of this instance's interaction class.
     *
-    * @return the simple name of this instance's object class
+    * @return the simple name of this instance's interaction class
     */
     public String getSimpleClassName() {
         return get_simple_class_name();
     }
 
     /**
-    * Returns a set containing the names of all of the non-hiddenattributes of an
-    * object class instance.
+    * Returns a set containing the names of all of the non-hiddenparameters of an
+    * interaction class instance.
     *
-    * @return set containing the names of all of the attributes of an
-    * object class instance
+    * @return set containing the names of all of the parameters of an
+    * interaction class instance
     */
-    public Set< String > getAttributeNames() {
-        return get_attribute_names();
+    public Set< String > getParameterNames() {
+        return get_parameter_names();
     }
 
     /**
-    * Returns a set containing the names of all of the attributes of an
-    * object class instance.
+    * Returns a set containing the names of all of the parameters of an
+    * interaction class instance.
     *
-    * @return set containing the names of all of the attributes of an
-    * object class instance
+    * @return set containing the names of all of the parameters of an
+    * interaction class instance
     */
-    public Set< String > getAllAttributeNames() {
-        return get_all_attribute_names();
+    public Set< String > getAllParameterNames() {
+        return get_all_parameter_names();
     }
 
     @Override
-    public String getAttributeName(int datamemberHandle) {
-        if (datamemberHandle == _fLoad_handle) return "fLoad";
-        else return super.getAttributeName(datamemberHandle);
+    public String getParameterName(int datamemberHandle) {
+        if (datamemberHandle == _actualLogicalGenerationTime_handle) return "actualLogicalGenerationTime";
+        else if (datamemberHandle == _fLoad_handle) return "fLoad";
+        else if (datamemberHandle == _federateFilter_handle) return "federateFilter";
+        else if (datamemberHandle == _originFed_handle) return "originFed";
+        else if (datamemberHandle == _sourceFed_handle) return "sourceFed";
+        else return super.getParameterName(datamemberHandle);
     }
 
     /**
-    * Publishes the object class of this instance of the class for a federate.
+    * Publishes the interaction class of this instance of the class for a federate.
     *
     * @param rti handle to the Local RTI Component
     */
-    public void publishObject(RTIambassador rti) {
+    public void publishInteraction(RTIambassador rti) {
         publish(rti);
     }
 
     /**
-    * Unpublishes the object class of this instance of this class for a federate.
+    * Unpublishes the interaction class of this instance of this class for a federate.
     *
     * @param rti handle to the Local RTI Component
     */
-    public void unpublishObject(RTIambassador rti) {
+    public void unpublishInteraction(RTIambassador rti) {
         unpublish(rti);
     }
 
     /**
-    * Subscribes a federate to the object class of this instance of this class.
+    * Subscribes a federate to the interaction class of this instance of this class.
     *
     * @param rti handle to the Local RTI Component
     */
-    public void subscribeObject(RTIambassador rti) {
+    public void subscribeInteraction(RTIambassador rti) {
         subscribe(rti);
     }
 
     /**
-    * Unsubscribes a federate from the object class of this instance of this class.
+    * Unsubscribes a federate from the interaction class of this instance of this class.
     *
     * @param rti handle to the Local RTI Component
     */
-    public void unsubscribeObject(RTIambassador rti) {
+    public void unsubscribeInteraction(RTIambassador rti) {
         unsubscribe(rti);
     }
 
     @Override
     public String toString() {
         return getClass().getName() + "("
-                + "fLoad:" + get_fLoad()
+                + "actualLogicalGenerationTime:" + get_actualLogicalGenerationTime()
+                + "," + "fLoad:" + get_fLoad()
+                + "," + "federateFilter:" + get_federateFilter()
+                + "," + "originFed:" + get_originFed()
+                + "," + "sourceFed:" + get_sourceFed()
                 + ")";
     }
 
+    private double _fLoad = 0;
 
     /**
-    * Publishes the "fLoad" attribute of the attribute's containing object
-    * class for a federate.
-    * Note:  This method only marks the "fLoad" attribute for publication.
-    * To actually publish the attribute, the federate must (re)publish its containing
-    * object class.
-    * (using &lt;objectClassName&gt;.publish( RTIambassador rti ) ).
-    */
-    public static void publish_fLoad() {
-        _publishAttributeNameSet.add( "fLoad" );
-    }
-
-    /**
-    * Unpublishes the "fLoad" attribute of the attribute's containing object
-    * class for a federate.
-    * Note:  This method only marks the "fLoad" attribute for unpublication.
-    * To actually publish the attribute, the federate must (re)publish its containing
-    * object class.
-    * (using &lt;objectClassName&gt;.publish( RTIambassador rti ) ).
-    */
-    public static void unpublish_fLoad() {
-        _publishAttributeNameSet.remove( "fLoad" );
-    }
-
-    /**
-    * Subscribes a federate to the "fLoad" attribute of the attribute's
-    * containing object class.
-    * Note:  This method only marks the "fLoad" attribute for subscription.
-    * To actually subscribe to the attribute, the federate must (re)subscribe to its
-    * containing object class.
-    * (using &lt;objectClassName&gt;.subscribe( RTIambassador rti ) ).
-    */
-    public static void subscribe_fLoad() {
-        _subscribeAttributeNameSet.add( "fLoad" );
-    }
-
-    /**
-    * Unsubscribes a federate from the "fLoad" attribute of the attribute's
-    * containing object class.
-    * Note:  This method only marks the "fLoad" attribute for unsubscription.
-    * To actually unsubscribe to the attribute, the federate must (re)subscribe to its
-    * containing object class.
-    * (using &lt;objectClassName&gt;.subscribe( RTIambassador rti ) ).
-    */
-    public static void unsubscribe_fLoad() {
-        _subscribeAttributeNameSet.remove( "fLoad" );
-    }
-
-    protected Attribute< Double > _fLoad =
-            new Attribute< Double >(  new Double( 0 )  );
-
-    /**
-    * Set the value of the "fLoad" attribute to "value" for this object.
+    * Set the value of the "fLoad" parameter to "value" for this parameter.
     *
-    * @param value the new value for the "fLoad" attribute
+    * @param value the new value for the "fLoad" parameter
     */
     public void set_fLoad( double value ) {
-        _fLoad.setValue( value );
-        _fLoad.setTime( getTime() );
+        _fLoad = value;
     }
 
     /**
-    * Returns the value of the "fLoad" attribute of this object.
+    * Returns the value of the "fLoad" parameter of this interaction.
     *
-    * @return the value of the "fLoad" attribute
+    * @return the value of the "fLoad" parameter
     */
     public double get_fLoad() {
-        return _fLoad.getValue();
+        return _fLoad;
     }
 
-    /**
-    * Returns the current timestamp of the "fLoad" attribute of this object.
-    *
-    * @return the current timestamp of the "fLoad" attribute
-    */
-    public double get_fLoad_time() {
-        return _fLoad.getTime();
-    }
-
-    protected FromTRNSYS( ReflectedAttributes datamemberMap, boolean initFlag ) {
+    protected FromTRNSYS( ReceivedInteraction datamemberMap, boolean initFlag ) {
         super( datamemberMap, false );
-        if ( initFlag ) setAttributes( datamemberMap );
+        if ( initFlag ) setParameters( datamemberMap );
     }
 
-    protected FromTRNSYS( ReflectedAttributes datamemberMap, LogicalTime logicalTime, boolean initFlag ) {
+    protected FromTRNSYS( ReceivedInteraction datamemberMap, LogicalTime logicalTime, boolean initFlag ) {
         super( datamemberMap, logicalTime, false );
-        if ( initFlag ) setAttributes( datamemberMap );
+        if ( initFlag ) setParameters( datamemberMap );
     }
 
     /**
-    * Creates an instance of the FromTRNSYS object class, using
-    * "datamemberMap" to initialize its attribute values.
+    * Creates an instance of the FromTRNSYS interaction class, using
+    * "datamemberMap" to initialize its parameter values.
     * "datamemberMap" is usually acquired as an argument to an RTI federate
     * callback method, such as "receiveInteraction".
     *
     * @param datamemberMap data structure containing initial values for the
-    * attributes of this new FromTRNSYS object class instance
+    * parameters of this new FromTRNSYS interaction class instance
     */
-    public FromTRNSYS( ReflectedAttributes datamemberMap ) {
+    public FromTRNSYS( ReceivedInteraction datamemberMap ) {
         this( datamemberMap, true );
     }
 
     /**
-    * Like {@link #FromTRNSYS( ReflectedAttributes datamemberMap )}, except this
-    * new FromTRNSYS object class instance is given a timestamp of
+    * Like {@link #FromTRNSYS( ReceivedInteraction datamemberMap )}, except this
+    * new FromTRNSYS interaction class instance is given a timestamp of
     * "logicalTime".
     *
     * @param datamemberMap data structure containing initial values for the
-    * attributes of this new FromTRNSYS object class instance
-    * @param logicalTime timestamp for this new FromTRNSYS object class
+    * parameters of this new FromTRNSYS interaction class instance
+    * @param logicalTime timestamp for this new FromTRNSYS interaction class
     * instance
     */
-    public FromTRNSYS( ReflectedAttributes datamemberMap, LogicalTime logicalTime ) {
+    public FromTRNSYS( ReceivedInteraction datamemberMap, LogicalTime logicalTime ) {
         this( datamemberMap, logicalTime, true );
     }
 
     /**
-    * Creates a new FromTRNSYS object class instance that is a duplicate
+    * Creates a new FromTRNSYS interaction class instance that is a duplicate
     * of the instance referred to by FromTRNSYS_var.
     *
-    * @param FromTRNSYS_var FromTRNSYS object class instance of which
-    * this newly created FromTRNSYS object class instance will be a
+    * @param FromTRNSYS_var FromTRNSYS interaction class instance of which
+    * this newly created FromTRNSYS interaction class instance will be a
     * duplicate
     */
     public FromTRNSYS( FromTRNSYS FromTRNSYS_var ) {
@@ -585,45 +525,33 @@ public class FromTRNSYS extends ObjectRoot {
     }
 
     /**
-    * Returns the value of the attribute whose name is "datamemberName"
-    * for this object.
+    * Returns the value of the parameter whose name is "datamemberName"
+    * for this interaction.
     *
-    * @param datamemberName name of attribute whose value is to be
+    * @param datamemberName name of parameter whose value is to be
     * returned
-    * @return value of the attribute whose name is "datamemberName"
-    * for this object
+    * @return value of the parameter whose name is "datamemberName"
+    * for this interaction
     */
-    public Object getAttribute( String datamemberName ) {
+    public Object getParameter( String datamemberName ) {
         if ( "fLoad".equals(datamemberName) ) return new Double(get_fLoad());
-        else return super.getAttribute( datamemberName );
+        else return super.getParameter( datamemberName );
     }
 
-    protected boolean setAttributeAux( String datamemberName, String val ) {
+    protected boolean setParameterAux( String datamemberName, String val ) {
         boolean retval = true;
         if ( "fLoad".equals( datamemberName) ) set_fLoad( Double.parseDouble(val) );
-        else retval = super.setAttributeAux( datamemberName, val );
+        else retval = super.setParameterAux( datamemberName, val );
 
         return retval;
     }
 
-    protected boolean setAttributeAux( String datamemberName, Object val ) {
+    protected boolean setParameterAux( String datamemberName, Object val ) {
         boolean retval = true;
         if ( "fLoad".equals( datamemberName) ) set_fLoad( (Double)val );
-        else retval = super.setAttributeAux( datamemberName, val );
+        else retval = super.setParameterAux( datamemberName, val );
 
         return retval;
-    }
-
-    @Override
-    protected SuppliedAttributes createSuppliedDatamembers(boolean force) {
-        SuppliedAttributes datamembers = _factory.createSuppliedAttributes();
- 
-        if (_publishAttributeNameSet.contains("fLoad") && _fLoad.shouldBeUpdated(force)) {
-            datamembers.add( getAttributeHandle("fLoad"), getAttribute("fLoad").toString().getBytes() );
-            _fLoad.setHasBeenUpdated();
-        }
-
-        return datamembers;
     }
 
     public void copyFrom( Object object ) {

@@ -31,14 +31,22 @@ public class ExternalJavaBase extends SynchronizedFederate {
         enableAsynchronousDelivery();
 
         // interaction pubsub
+        ToTRNSYS.publish(getLRC());
+        FromTRNSYS.subscribe(getLRC());
+        _subscribedInteractionFilter.setFedFilters( 
+           FromTRNSYS.get_handle(),
+           SubscribedInteractionFilter.OriginFedFilter.ORIGIN_FILTER_DISABLED,
+           SubscribedInteractionFilter.SourceFedFilter.SOURCE_FILTER_DISABLED);
 
         // object pubsub
-        ToTRNSYS.publish_pLoad();
-        ToTRNSYS.publish(getLRC());
-        FromTRNSYS.subscribe_fLoad();
-        FromTRNSYS.subscribe(getLRC());
     }
 
+    public ToTRNSYS create_ToTRNSYS() {
+        ToTRNSYS interaction = new ToTRNSYS();
+        interaction.set_sourceFed(getFederateId());
+        interaction.set_originFed(getFederateId());
+        return interaction;
+    }
 
     @Override
     public void receiveInteraction(int interactionClass,

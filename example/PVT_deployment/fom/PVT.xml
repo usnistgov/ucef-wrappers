@@ -8,7 +8,7 @@
         <name>PVT</name>
         <type>FOM</type>
         <version>0.1.0</version>
-        <modificationDate>2019-05-18</modificationDate>
+        <modificationDate>2019-05-23</modificationDate>
         <securityClassification>Unclassified</securityClassification>
         <description>
           This file was generated from WebGME based on the
@@ -19,38 +19,6 @@
             <pocOrg>gov.nist.hla.trnsys</pocOrg>
         </poc>
     </modelIdentification>
-    <objects>
-        <objectClass>
-            <name>ObjectRoot</name>
-            <sharing>Neither</sharing>
-            <objectClass>
-                <name>FromTRNSYS</name>
-                <sharing>PublishSubscribe</sharing>
-                <attribute>
-                    <name>fLoad</name>
-                    <dataType>double</dataType>
-                    <updateType>NA</updateType>
-                    <ownership>NoTransfer</ownership>
-                    <sharing>PublishSubscribe</sharing>
-                    <transportation>HLAreliable</transportation>
-                    <order>TimeStamp</order>
-                </attribute>
-            </objectClass>
-            <objectClass>
-                <name>ToTRNSYS</name>
-                <sharing>PublishSubscribe</sharing>
-                <attribute>
-                    <name>pLoad</name>
-                    <dataType>double</dataType>
-                    <updateType>NA</updateType>
-                    <ownership>NoTransfer</ownership>
-                    <sharing>PublishSubscribe</sharing>
-                    <transportation>HLAreliable</transportation>
-                    <order>TimeStamp</order>
-                </attribute>
-            </objectClass>
-        </objectClass>
-    </objects>
     <interactions>
         <interactionClass>
             <name>InteractionRoot</name>
@@ -125,6 +93,26 @@
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
                     </interactionClass>
+                </interactionClass>
+                <interactionClass>
+                    <name>FromTRNSYS</name>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <parameter> 
+                        <name>fLoad</name>
+                        <dataType>double</dataType>
+                    </parameter>
+                </interactionClass>
+                <interactionClass>
+                    <name>ToTRNSYS</name>
+                    <sharing>PublishSubscribe</sharing>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <parameter> 
+                        <name>pLoad</name>
+                        <dataType>double</dataType>
+                    </parameter>
                 </interactionClass>
             </interactionClass>
         </interactionClass>
